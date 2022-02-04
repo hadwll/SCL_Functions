@@ -1,0 +1,40 @@
+Function Scale_With_Error_Check :REAL
+
+VAR_INPUT
+Value_In  :REAL;
+Scale_in_min :REAL;
+Scale_in_max :REAL;
+Scale_out_min :REAL;
+Scale_out_max : REAL;
+END_VAR
+
+VAR
+a: REAL;
+b: REAL;
+Error: BOOL :=FALSE;
+END_VAR
+
+
+
+IF #Scale_out_min >= #Scale_out_max THEN
+    #Error := TRUE;
+END_IF;
+
+IF #Scale_in_min >= #Scale_in_max THEN
+    #Error := TRUE;
+END_IF;
+
+IF #Value_In < #Scale_in_min OR #Value_In > #Scale_in_max THEN 
+    #Error := TRUE;
+END_IF;
+
+IF #Error = FALSE THEN
+    #a:=(#Scale_out_max - #Scale_out_min)/(#Scale_in_max-#Scale_in_min);
+    #b := #Scale_out_max - (#a * #Scale_in_max);
+    #Scale_With_Error_Check := #a * #Value_In + #b;
+ELSE
+    #Scale_With_Error_Check := 0;
+    
+END_IF;
+
+    
