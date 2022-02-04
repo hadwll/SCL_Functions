@@ -1,0 +1,53 @@
+// This FB will delay the 
+
+FUNCTION_BLOCK 	Time_on_off_delay 
+
+VAR_INPUT
+start_Input:	Bool;
+stop_Input:		Bool;
+time_on_dly:	Time;
+time_off_dly:	Time; 
+END_VAR
+
+VAR_OUTPUT
+output: bool;
+END_VAR
+
+VAR
+Time_on_delay_1:	TON_TIME;
+Time_of_delay_1:	TOF_TIME;
+timer_trigger_0:	Bool;
+timer_trigger_1:	Bool;
+timer_trigger_2:	Bool;
+END_VAR
+
+
+
+// this block creates a start and  stop delay for an output.
+// 
+
+IF #start_Input AND NOT #stop_Input THEN
+    #timer_trigger_0:= true;
+END_IF;
+
+IF #stop_Input THEN
+    #timer_trigger_0 := false;
+END_IF;
+
+#IEC_Timer_0_Instance(IN:=#timer_trigger_0,
+                      PT:=#time_on_dly,
+                      Q=>#timer_trigger_1);
+
+
+
+#IEC_Timer_0_Instance_1(IN:=#timer_trigger_1,
+                        PT:=#time_off_dly,
+                        Q=>#timer_trigger_2);
+
+
+IF #timer_trigger_2 THEN
+    #output := true;
+ELSE
+    #output:= false;
+END_IF;
+
